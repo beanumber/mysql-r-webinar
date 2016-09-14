@@ -1,4 +1,4 @@
 MySQL and R Webinar
 ================
 
-You can clone this repository
+The website is at: <https://beanumber.github.io/mysql-r-webinar/>
