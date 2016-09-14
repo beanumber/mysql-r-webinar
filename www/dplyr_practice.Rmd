@@ -1,0 +1,8 @@
+---
+title: "Practice with dplyr"
+---
+
+```{r, echo=FALSE, message=FALSE} 
+require(knitr)
+opts_chunk$set(echo = TRUE, eval=FALSE)
+```

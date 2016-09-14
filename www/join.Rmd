@@ -1,0 +1,26 @@
+---
+title: "Joining Multiple Tables"
+---
+
+## `JOIN`
+
+- [match all rows](http://www.postgresql.org/docs/9.4/static/sql-select.html#SQL-FROM) from the first table *only if* there is a match on the second table
+
+## `LEFT JOIN`
+
+- match all rows from the first table *regardless* of whether there is a match on the second table
+- `RIGHT JOIN`: opposite of `LEFT JOIN`
+
+## `OUTER JOIN`
+
+- match all rows from *both* tables regardless of whether there is a match on the other table
+
+## `CROSS JOIN`
+
+- all possible pairs from the two tables
+- e.g. finding all possible edges in a graph:
+    - `CROSS JOIN` the edge list with itself
+
+## Subqueries
+
+- [Join a table of results from another query](http://www.postgresql.org/docs/9.4/static/functions-subquery.html)

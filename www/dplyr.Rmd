@@ -1,0 +1,55 @@
+---
+title: "dplyr and SQL"
+---
+
+## `dplyr` and SQL
+
+A `data.frame`
+
+```{r}
+head(mtcars)
+dim(mtcars)
+class(mtcars)
+```
+
+Make a SQLite database
+
+```{r, message=FALSE}
+library(etl)
+cars <- etl("mtcars")
+cars %>%
+  etl_create()
+mtcars2 <- cars %>%
+  tbl("mtcars")
+dim(mtcars2)
+head(mtcars2)
+class(mtcars2)
+```
+
+Get some results
+
+```{r, eval=FALSE}
+mtcars %>%
+  group_by(cyl) %>%
+  summarize(N = n(), avg_mpg = mean(mpg), 
+            broken = paste(mean(mpg), mean(disp), sep = "-"))
+
+
+mtcars2 %>%
+  group_by(cyl) %>%
+  summarize(N = n(), avg_mpg = mean(mpg), 
+            broken = paste(mean(mpg), mean(disp)), sep = "-") %>%
+  show_query()
+
+mtcars3 <- mtcars2 %>% collect()
+
+
+%>%
+  show_query()
+
+mtcars2 %>%
+  group_by(cyl) %>%
+  summarize(N = n(), avg_mpg = mean(mpg), 
+            broken = avg(mpg) %||% "-" %||% mean(disp)) %>%
+  show_query()
+```

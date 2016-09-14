@@ -1,0 +1,32 @@
+---
+title: "Writing Queries"
+---
+
+## `SELECT...FROM`
+
+- [What table and which columns](http://www.postgresql.org/docs/9.4/static/queries.html)
+
+## `AS`
+  
+- [column labels](http://www.postgresql.org/docs/9.4/static/queries-select-lists.html#QUERIES-COLUMN-LABELS) for the result set  
+  
+## `WHERE`
+
+- [String Functions](http://www.postgresql.org/docs/9.4/static/functions-string.html)
+- [Ranges](http://www.postgresql.org/docs/9.4/static/functions-range.html)
+- [Dates](http://www.postgresql.org/docs/9.4/static/functions-datetime.html)
+- [`IN`](http://www.postgresql.org/docs/9.4/static/functions-comparisons.html)
+- [Regular Expressions](http://www.postgresql.org/docs/9.4/static/functions-matching.html)
+
+## `ORDER BY`
+
+- [sort the results](http://www.postgresql.org/docs/9.4/static/queries-order.html)
+   
+## `LIMIT`
+
+- [`LIMIT`](http://www.postgresql.org/docs/9.4/static/queries-limit.html): Restrict number of rows returned
+- `OFFSET`: don't necessarily start at the beginning
+
+## Set Operations
+
+- [Combining Queries](http://www.postgresql.org/docs/9.4/static/queries-union.html)

@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>Practice: Aggregating Results</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/united.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<link href="site_libs/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" />
+
+<style type="text/css">code{white-space: pre;}</style>
+<link rel="stylesheet"
+      href="site_libs/highlight/textmate.css"
+      type="text/css" />
+<script src="site_libs/highlight/highlight.js"></script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+<link rel="stylesheet" href="include/beanumber.css" type="text/css" />
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">MySQL and R Webinar</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa-home"></span>
+     
+    Home
+  </a>
+</li>
+<li>
+  <a href="resources.html">Resources</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Content
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="intro.html">Introduction</a>
+    </li>
+    <li>
+      <a href="postgres.html">Getting Started with PostgreSQL</a>
+    </li>
+    <li>
+      <a href="queries.html">Writing Queries</a>
+    </li>
+    <li>
+      <a href="join.html">Joining Two Tables</a>
+    </li>
+    <li>
+      <a href="structure.html">Table Structure</a>
+    </li>
+    <li>
+      <a href="aggregating.html">Aggregating Results</a>
+    </li>
+    <li>
+      <a href="create.html">Creating Tables</a>
+    </li>
+    <li>
+      <a href="dplyr.html">dplyr and SQL</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Activities
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="queries_practice.html">Writing Queries</a>
+    </li>
+    <li>
+      <a href="join_practice.html">Joining Two Tables</a>
+    </li>
+    <li>
+      <a href="structure_practice.html">Table Structure</a>
+    </li>
+    <li>
+      <a href="aggregating_practice.html">Aggregating Results</a>
+    </li>
+    <li>
+      <a href="tables_practice.html">Creating Tables</a>
+    </li>
+    <li>
+      <a href="dplyr_practice.html">dplyr and SQL</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Data
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="data/imdb.backup">IMDB</a>
+    </li>
+    <li>
+      <a href="http://seanlahman.com/files/database/2016-03-09_mysql-core.zip">Baseball</a>
+    </li>
+    <li>
+      <a href="https://github.com/beanumber/airlines">Airlines (ETL)</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Practice: Aggregating Results</h1>
+
+</div>
+
+
+<div id="questions" class="section level4">
+<h4>Questions</h4>
+<p>Use the <code>imdb</code> database to answer the following questions.</p>
+<ol>
+<li><p>Count the number of movies in each production year.</p></li>
+<li><p>Find the total number of votes cast for movies in each year since 2000.</p></li>
+<li><p>What is wrong with this SQL statement, and how can we correct it?</p></li>
+</ol>
+<pre><code>SELECT production_year, sum(votes) 
+  FROM movies 
+  GROUP BY production_year 
+  HAVING votes &gt; 100000</code></pre>
+<!--
+> The problem is that the HAVING clause operates on the number of votes for an individual movie, but there is no column called "votes" in the result set. 
+
+> We can correct this in two different ways, depending on what we want. If we want to include only individual movies with at least 100,000 votes, then we should change the "HAVING" clause to a "WHERE" clause. If, on the other hand, we want production years with at least 100,000 total votes, then we should specify "HAVING sum(votes) > 100000" instead. 
+-->
+<ol>
+<li>What is wrong with this statement, and how can we correct it?</li>
+</ol>
+<pre><code>SELECT production_year, sum(votes) 
+  FROM movies 
+  GROUP BY votes 
+  HAVING votes &gt; 100000</code></pre>
+<!--
+> Here, we are grouping by the number of votes, but that column is not SELECTed in the result set. 
+
+> It's less clear what the intention was here, but we can correct it using either of the two methods mentioned above. 
+-->
+<ol>
+<li><p>Compute the average rating of movies in 2000 and 2010.</p></li>
+<li><p>Find the movie id for <a href="http://www.imdb.com/title/tt0468569/"><em>The Dark Knight</em></a>.</p></li>
+<li><p>Using the <code>id</code> you found in the previous question, find all of the cast assignments for <em>The Dark Knight</em>.</p></li>
+<li><p>Add the names of the people you found in the previous question by joining onto the <code>people</code> table.</p></li>
+<li><p>Add the names of the roles you found in the previous question by joining onto the <code>role_type</code> table.</p></li>
+<li><p>How many actors, actresses, and directors where there for <em>The Dark Knight</em>? Find all three numbers using one query.</p></li>
+<li><p>Identify the five actors who played more than one role in <em>The Dark Knight</em>, and list the roles?</p></li>
+<li><p>The <em>Godfather</em> trilogy consists of three movies: <em>The Godfather</em>, <em>The Godfather: Part II</em>, and <em>The Godfather: Part III</em>. Find the IDs of all three movies.</p></li>
+<li><p>List the movie title, person name, and role for all those involved with the original <em>The Godfather</em> movie.</p></li>
+<li><p>List the movie title, person name, and role for all those involved with the <strong>first two</strong> <em>Godfather</em> movies.</p></li>
+</ol>
+<blockquote>
+<p>Hint: One way to do this is with <a href="http://www.postgresql.org/docs/9.4/static/queries-union.html">INTERSECT</a>. There are other ways!</p>
+</blockquote>
+<ol>
+<li>List the movie title, person name, and role for all those involved with the <strong>all three</strong> <em>Godfather</em> movies.</li>
+</ol>
+<blockquote>
+<p>Challenge: Do this without using INTERSECT!</p>
+</blockquote>
+<ol>
+<li>List all the movies that Al Pacino and Robert De Niro have been in <strong>together</strong>.</li>
+</ol>
+</div>
+
+    <div id="footer">
+      <div class="container">
+        <p class="muted credit">Created by <a href="http://www.science.smith.edu/~bbaumer">Ben Baumer</a>.</p>
+      </div>
+    </div>
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+$(document).ready(function () {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+});
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

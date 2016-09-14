@@ -1,0 +1,27 @@
+---
+title: "Aggregating Results"
+---
+
+## `GROUP BY`
+
+- ["Roll Up"](http://www.postgresql.org/docs/9.4/static/sql-select.html#SQL-GROUPBY) tables
+
+## `HAVING`
+
+- Filter the [**result set**](http://www.postgresql.org/docs/9.4/static/sql-select.html#SQL-HAVING)
+- Analogous to `WHERE` but different. (Why?)
+- Always use `WHERE` when you can. (Why?)
+- Compare:
+    - `SELECT sum(1) as N FROM flights WHERE dest = 'BDL';`
+    - `SELECT dest, sum(1) as N FROM flights GROUP BY dest HAVING dest = 'BDL';`
+
+## Aggregate Functions
+
+- `COUNT`, `SUM`, `MIN`, `MAX`, `AVG`
+- `array_agg`, `DISTINCT`
+- [More](http://www.postgresql.org/docs/9.4/static/functions-aggregate.html)
+
+## Window Functions
+
+- [Compute per row values that may depend on the full result set](http://www.postgresql.org/docs/9.4/static/tutorial-window.html)
+- e.g. [`rank`](http://www.postgresql.org/docs/9.4/static/functions-window.html)
