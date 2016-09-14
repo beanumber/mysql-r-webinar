@@ -1,2 +1,4 @@
-# mysql-r-webinar
-MySQL and R webinar
+MySQL and R Webinar
+================
+
+You can clone this repository
