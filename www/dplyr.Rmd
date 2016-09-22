@@ -4,7 +4,7 @@ title: "dplyr and SQL"
 
 ```{r, echo=FALSE, message=FALSE}
 library(knitr)
-opts_chunk$set(error = TRUE, message = FALSE)
+opts_chunk$set(error = TRUE, message = FALSE, eval=FALSE)
 ```
 
 
