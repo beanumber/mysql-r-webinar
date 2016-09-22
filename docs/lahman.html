@@ -11,7 +11,7 @@
 
 
 
-<title>MySQL and R Webinar</title>
+<title>Lahman Database</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -212,18 +212,21 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">MySQL and R Webinar</h1>
+<h1 class="title toc-ignore">Lahman Database</h1>
 
 </div>
 
 
-<div id="concepts" class="section level2">
-<h2>Concepts</h2>
-<ol>
-<li>Using MySQL in the <a href="https://www.mysql.com/products/workbench/">Workbench</a></li>
-<li>Using MySQL from R through <a href="https://cran.r-project.org/web/packages/DBI/index.html">DBI</a></li>
-<li>Using MySQL from R through <a href="https://cran.r-project.org/web/packages/dplyr/index.html">dplyr</a></li>
-</ol>
+<div id="about-the-database" class="section level2">
+<h2>About the database</h2>
+<p>The <a href="http://www.seanlahman.com/baseball-archive/statistics/">Lahman database</a> is maintained by Sean Lahman, and contains seasonal information about <a href="https://en.wikipedia.org/wiki/Major_League_Baseball">Major League Baseball</a> dating back to 1871. If you have any questions about baseball, just ask!</p>
+<p>Download the latest version of the database <a href="http://seanlahman.com/files/database/lahman-sql_2015-01-24.zip">here</a></p>
+</div>
+<div id="r-version" class="section level2">
+<h2>R version</h2>
+<p>There is also a version of the Lahman database pacakged for R. To use it, try:</p>
+<pre class="r"><code>install.packages(&quot;Lahman&quot;)
+library(Lahman)</code></pre>
 </div>
 
     <div id="footer">

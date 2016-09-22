@@ -1,0 +1,144 @@
+---
+title: "MySQL Workbench"
+---
+
+## Introduction to Lahman database
+
+```{r, echo=FALSE, message=FALSE}
+library(knitr)
+opts_chunk$set(echo = FALSE, message = FALSE, eval = FALSE)
+library(dplyr)
+library(DBI)
+db <- src_mysql(user = "r-user", password = "mypass", dbname = "stats")
+dbListTables(db$con)
+```
+
+```{r}
+opts_chunk$set(engine.opts = "-t lahman")
+```
+
+
+
+## Motivating questions
+
+#. Find all batters who have accumulated at least 3000 hits in their career.
+
+```{mysql}
+SELECT playerID, sum(H) as tH 
+  FROM Batting
+  GROUP BY playerID
+  HAVING tH >= 3000
+  ORDER BY tH desc;
+```
+
+#. Find all batters who have accumulated at least 500 home runs in their career.
+
+```{mysql}
+SELECT playerID, sum(HR) as tHR 
+  FROM Batting
+  GROUP BY playerID
+  HAVING tHR >= 500
+  ORDER BY tHR desc;
+```
+
+#. Find all batters who have accumulated at least 300 home runs and at least 300 stolen bases in their career. 
+
+```{mysql}
+SELECT playerID, sum(HR) as tHR, sum(SB) as tSB 
+  FROM Batting
+  GROUP BY playerID
+  HAVING tHR >= 300 AND tSB >= 300
+  ORDER BY tHR desc;
+```
+
+#. Find all pitchers who have accumulated at least 300 wins and at least 3000 strikeouts in their career. 
+
+```{mysql}
+SELECT playerID, sum(W) as tW, sum(SO) as tSO 
+  FROM Pitching
+  GROUP BY playerID
+  HAVING tW >= 300 AND tSO >= 3000
+  ORDER BY tW desc;
+```
+
+#. Find all batters with at least 50 home runs in a single season.
+
+
+```{mysql}
+SELECT playerID, yearID, sum(HR) as tHR
+  FROM Batting
+  GROUP BY playerID, yearID
+  HAVING tHR >= 50
+  ORDER BY tHR desc;
+```
+
+
+#. Find all batters who had at least 40 home runs and at least 40 stolen bases in a single season.
+
+
+```{mysql}
+SELECT playerID, yearID, sum(HR) as tHR, sum(SB) as tSB 
+  FROM Batting
+  GROUP BY playerID, yearID
+  HAVING tHR >= 40 AND tSB >= 40
+  ORDER BY tHR desc;
+```
+
+#. Find the namnes of the top 10 batters who had the most hits during the decade of the 1980s.
+
+```{mysql}
+SELECT b.playerID, CONCAT(m.nameLast, ', ', m.nameFirst) as Name, 
+    CONCAT(min(yearID), '-', max(yearID)) as span, sum(H) as tH
+  FROM Batting b
+  LEFT JOIN Master m ON b.playerID = m.playerID 
+  WHERE yearID BETWEEN 1980 AND 1989
+  GROUP BY playerID
+  ORDER BY tH desc
+  LIMIT 0, 10;
+```
+
+
+#. Find the names of all batters who have accumulated at least 3000 hits **or** at least 500 home runs but are **not** in the Hall of Fame.
+
+```{mysql}
+SELECT b.playerID, CONCAT(m.nameLast, ', ', m.nameFirst) as Name, 
+    CONCAT(min(b.yearID), '-', max(b.yearID)) as span, 
+    sum(H) as tH, sum(HR) as tHR, max(h.inducted) as inducted
+  FROM Batting b
+  LEFT JOIN Master m ON b.playerID = m.playerID 
+  LEFT JOIN (
+    SELECT playerID, inducted 
+    FROM HallOfFame 
+    WHERE inducted = 'Y' AND votedBy = 'BBWAA'
+  ) h ON h.playerId = b.playerID
+  GROUP BY playerID
+  HAVING tH >= 3000 OR tHR > 500
+  ORDER BY tH desc;
+```
+
+
+
+#. Make a plot showing the average strikeout rate in the AL and NL, going back to 1954.
+
+```{mysql}
+SELECT yearID, lgID, sum(SO) / sum(AB + BB + HBP + SF + SH) as SO_rate
+  FROM Batting 
+  WHERE yearID >= 1954
+  GROUP BY yearID, lgID;
+```
+
+
+
+#. Consider Bill James' famous ["Pythagorean" model](https://en.wikipedia.org/wiki/Pythagorean_expectation) for expected winning percentage. 
+$$
+  \hat{WPct} = \frac{1}{1 + (RA/RS)^k}, 
+$$
+where $WPct$ is team winning percentage and $RS$ and $RA$ are team runs scored and allowed, respectively. Find the optimal value of $k$ using data since 1954. 
+
+
+
+```{mysql}
+SELECT teamID, yearID, W / (W + L) as WPct, R as RS, RA
+  FROM Teams
+  WHERE yearID >= 1954;
+```

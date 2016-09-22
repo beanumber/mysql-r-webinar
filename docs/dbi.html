@@ -11,7 +11,7 @@
 
 
 
-<title>MySQL and R Webinar</title>
+<title>DBI</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -212,18 +212,26 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">MySQL and R Webinar</h1>
+<h1 class="title toc-ignore">DBI</h1>
 
 </div>
 
 
-<div id="concepts" class="section level2">
-<h2>Concepts</h2>
-<ol>
-<li>Using MySQL in the <a href="https://www.mysql.com/products/workbench/">Workbench</a></li>
-<li>Using MySQL from R through <a href="https://cran.r-project.org/web/packages/DBI/index.html">DBI</a></li>
-<li>Using MySQL from R through <a href="https://cran.r-project.org/web/packages/dplyr/index.html">dplyr</a></li>
-</ol>
+<div id="dbi" class="section level2">
+<h2>DBI</h2>
+<pre class="r"><code>library(DBI)</code></pre>
+<pre><code>## Loading required package: methods</code></pre>
+<pre class="r"><code>conn &lt;- dbConnect(RMySQL::MySQL(), dbname = &quot;stats&quot;)
+dbListTables(conn)</code></pre>
+<pre><code>##  [1] &quot;allstarfull&quot;         &quot;appearances&quot;         &quot;awardsmanagers&quot;     
+##  [4] &quot;awardsplayers&quot;       &quot;awardssharemanagers&quot; &quot;awardsshareplayers&quot; 
+##  [7] &quot;batting&quot;             &quot;battingpost&quot;         &quot;collegeplaying&quot;     
+## [10] &quot;fielding&quot;            &quot;fieldingof&quot;          &quot;fieldingpost&quot;       
+## [13] &quot;halloffame&quot;          &quot;homegames&quot;           &quot;managers&quot;           
+## [16] &quot;managershalf&quot;        &quot;master&quot;              &quot;parks&quot;              
+## [19] &quot;pitching&quot;            &quot;pitchingpost&quot;        &quot;salaries&quot;           
+## [22] &quot;schools&quot;             &quot;seriespost&quot;          &quot;teams&quot;              
+## [25] &quot;teamsfranchises&quot;     &quot;teamshalf&quot;</code></pre>
 </div>
 
     <div id="footer">

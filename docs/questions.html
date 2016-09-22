@@ -11,7 +11,7 @@
 
 
 
-<title>MySQL and R Webinar</title>
+<title>MySQL Workbench</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -212,17 +212,38 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">MySQL and R Webinar</h1>
+<h1 class="title toc-ignore">MySQL Workbench</h1>
 
 </div>
 
 
-<div id="concepts" class="section level2">
-<h2>Concepts</h2>
+<div id="introduction-to-lahman-database" class="section level2">
+<h2>Introduction to Lahman database</h2>
+<pre><code>##  [1] &quot;allstarfull&quot;         &quot;appearances&quot;         &quot;awardsmanagers&quot;     
+##  [4] &quot;awardsplayers&quot;       &quot;awardssharemanagers&quot; &quot;awardsshareplayers&quot; 
+##  [7] &quot;batting&quot;             &quot;battingpost&quot;         &quot;collegeplaying&quot;     
+## [10] &quot;fielding&quot;            &quot;fieldingof&quot;          &quot;fieldingpost&quot;       
+## [13] &quot;halloffame&quot;          &quot;homegames&quot;           &quot;managers&quot;           
+## [16] &quot;managershalf&quot;        &quot;master&quot;              &quot;parks&quot;              
+## [19] &quot;pitching&quot;            &quot;pitchingpost&quot;        &quot;salaries&quot;           
+## [22] &quot;schools&quot;             &quot;seriespost&quot;          &quot;teams&quot;              
+## [25] &quot;teamsfranchises&quot;     &quot;teamshalf&quot;</code></pre>
+</div>
+<div id="motivating-questions" class="section level2">
+<h2>Motivating questions</h2>
 <ol>
-<li>Using MySQL in the <a href="https://www.mysql.com/products/workbench/">Workbench</a></li>
-<li>Using MySQL from R through <a href="https://cran.r-project.org/web/packages/DBI/index.html">DBI</a></li>
-<li>Using MySQL from R through <a href="https://cran.r-project.org/web/packages/dplyr/index.html">dplyr</a></li>
+<li><p>Find all batters who have accumulated at least 3000 hits in their career.</p></li>
+<li><p>Find all batters who have accumulated at least 500 home runs in their career.</p></li>
+<li><p>Find all batters who have accumulated at least 300 home runs and at least 300 stolen bases in their career.</p></li>
+<li><p>Find all pitchers who have accumulated at least 300 wins and at least 3000 strikeouts in their career.</p></li>
+<li><p>Find all batters with at least 50 home runs in a single season.</p></li>
+<li><p>Find all batters who had at least 40 home runs and at least 40 stolen bases in a single season.</p></li>
+<li><p>Find the namnes of the top 10 batters who had the most hits during the decade of the 1980s.</p></li>
+<li><p>Find the names of all batters who have accumulated at least 3000 hits <strong>or</strong> at least 500 home runs but are <strong>not</strong> in the Hall of Fame.</p></li>
+<li><p>Make a plot showing the average strikeout rate in the AL and NL, going back to 1954.</p></li>
+<li><p>Consider Bill James’ famous <a href="https://en.wikipedia.org/wiki/Pythagorean_expectation">“Pythagorean” model</a> for expected winning percentage. <span class="math display">\[
+  \hat{WPct} = \frac{1}{1 + (RA/RS)^k}, 
+\]</span> where <span class="math inline">\(WPct\)</span> is team winning percentage and <span class="math inline">\(RS\)</span> and <span class="math inline">\(RA\)</span> are team runs scored and allowed, respectively. Find the optimal value of <span class="math inline">\(k\)</span> using data since 1954.</p></li>
 </ol>
 </div>
 

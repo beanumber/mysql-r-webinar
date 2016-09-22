@@ -1,0 +1,19 @@
+---
+title: "Lahman Database"
+---
+
+## About the database
+
+The [Lahman database](http://www.seanlahman.com/baseball-archive/statistics/) is maintained by Sean Lahman, and contains seasonal information about [Major League Baseball](https://en.wikipedia.org/wiki/Major_League_Baseball) dating back to 1871. If you have any questions about baseball, just ask!
+
+Download the latest version of the database [here](http://seanlahman.com/files/database/lahman-sql_2015-01-24.zip)
+
+## R version
+
+There is also a version of the Lahman database pacakged for R. To use it, try:
+
+```{r, eval=FALSE}
+install.packages("Lahman")
+library(Lahman)
+```
+

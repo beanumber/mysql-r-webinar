@@ -1,0 +1,18 @@
+---
+title: "DBI"
+---
+
+## DBI
+
+```{r}
+library(DBI)
+conn <- dbConnect(RMySQL::MySQL(), dbname = "lahman", user = "r-user", password = "mypass")
+dbListTables(conn)
+```
+
+```{r}
+sql <- "SELECT * FROM Batting WHERE playerID = 'jeterde01';"
+res <- dbGetQuery(conn, sql)
+res
+```
+

@@ -9,46 +9,14 @@ navbar:
       href: index.html
     - text: "Resources"
       href: resources.html
-    - text: "Content"
-      menu:
-        - text: "Introduction"
-          href: intro.html
-        - text: "Getting Started with PostgreSQL"
-          href: postgres.html
-        - text: "Writing Queries"
-          href: queries.html
-        - text: "Joining Two Tables"
-          href: join.html
-        - text: "Table Structure"
-          href: structure.html
-        - text: "Aggregating Results"
-          href: aggregating.html
-        - text: "Creating Tables"
-          href: create.html
-        - text: "dplyr and SQL"
-          href: dplyr.html
-    - text: "Activities"
-      menu:
-        - text: "Writing Queries"
-          href: queries_practice.html
-        - text: "Joining Two Tables"
-          href: join_practice.html
-        - text: "Table Structure"
-          href: structure_practice.html
-        - text: "Aggregating Results"
-          href: aggregating_practice.html
-        - text: "Creating Tables"
-          href: tables_practice.html
-        - text: "dplyr and SQL"
-          href: dplyr_practice.html
-    - text: "Data"
-      menu:
-        - text: "IMDB"
-          href: data/imdb.backup
-        - text: "Baseball"
-          href: http://seanlahman.com/files/database/2016-03-09_mysql-core.zip
-        - text: "Airlines (ETL)"
-          href: https://github.com/beanumber/airlines
+    - text: "MySQL"
+      href: questions.html
+    - text: "DBI"
+      href: dbi.html
+    - text: "dplyr"
+      href: dplyr.html
+    - text: "Lahman DB"
+      href: lahman.html
 output:
   html_document:
     theme: united

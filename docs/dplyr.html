@@ -188,83 +188,17 @@ $(document).ready(function () {
 <li>
   <a href="resources.html">Resources</a>
 </li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Content
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-    <li>
-      <a href="intro.html">Introduction</a>
-    </li>
-    <li>
-      <a href="postgres.html">Getting Started with PostgreSQL</a>
-    </li>
-    <li>
-      <a href="queries.html">Writing Queries</a>
-    </li>
-    <li>
-      <a href="join.html">Joining Two Tables</a>
-    </li>
-    <li>
-      <a href="structure.html">Table Structure</a>
-    </li>
-    <li>
-      <a href="aggregating.html">Aggregating Results</a>
-    </li>
-    <li>
-      <a href="create.html">Creating Tables</a>
-    </li>
-    <li>
-      <a href="dplyr.html">dplyr and SQL</a>
-    </li>
-  </ul>
+<li>
+  <a href="questions.html">MySQL</a>
 </li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Activities
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-    <li>
-      <a href="queries_practice.html">Writing Queries</a>
-    </li>
-    <li>
-      <a href="join_practice.html">Joining Two Tables</a>
-    </li>
-    <li>
-      <a href="structure_practice.html">Table Structure</a>
-    </li>
-    <li>
-      <a href="aggregating_practice.html">Aggregating Results</a>
-    </li>
-    <li>
-      <a href="tables_practice.html">Creating Tables</a>
-    </li>
-    <li>
-      <a href="dplyr_practice.html">dplyr and SQL</a>
-    </li>
-  </ul>
+<li>
+  <a href="dbi.html">DBI</a>
 </li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Data
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-    <li>
-      <a href="data/imdb.backup">IMDB</a>
-    </li>
-    <li>
-      <a href="http://seanlahman.com/files/database/2016-03-09_mysql-core.zip">Baseball</a>
-    </li>
-    <li>
-      <a href="https://github.com/beanumber/airlines">Airlines (ETL)</a>
-    </li>
-  </ul>
+<li>
+  <a href="dplyr.html">dplyr</a>
+</li>
+<li>
+  <a href="lahman.html">Lahman DB</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -285,67 +219,45 @@ $(document).ready(function () {
 
 <div id="dplyr-and-sql" class="section level2">
 <h2><code>dplyr</code> and SQL</h2>
-<p>A <code>data.frame</code></p>
-<pre class="r"><code>head(mtcars)</code></pre>
-<pre><code>##                    mpg cyl disp  hp drat    wt  qsec vs am gear carb
-## Mazda RX4         21.0   6  160 110 3.90 2.620 16.46  0  1    4    4
-## Mazda RX4 Wag     21.0   6  160 110 3.90 2.875 17.02  0  1    4    4
-## Datsun 710        22.8   4  108  93 3.85 2.320 18.61  1  1    4    1
-## Hornet 4 Drive    21.4   6  258 110 3.08 3.215 19.44  1  0    3    1
-## Hornet Sportabout 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2
-## Valiant           18.1   6  225 105 2.76 3.460 20.22  1  0    3    1</code></pre>
-<pre class="r"><code>dim(mtcars)</code></pre>
-<pre><code>## [1] 32 11</code></pre>
-<pre class="r"><code>class(mtcars)</code></pre>
-<pre><code>## [1] &quot;data.frame&quot;</code></pre>
-<p>Make a SQLite database</p>
-<pre class="r"><code>library(etl)
-cars &lt;- etl(&quot;mtcars&quot;)
-cars %&gt;%
-  etl_create()
-mtcars2 &lt;- cars %&gt;%
-  tbl(&quot;mtcars&quot;)
-dim(mtcars2)</code></pre>
-<pre><code>## [1] NA 12</code></pre>
-<pre class="r"><code>head(mtcars2)</code></pre>
-<pre><code>## Source:   query [?? x 12]
-## Database: sqlite 3.8.6 [/tmp/RtmpHAND3B/file2687642359d6.sqlite3]
-## 
-##           makeModel   mpg   cyl  disp    hp  drat    wt  qsec    vs    am
-##               &lt;chr&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;int&gt;
-## 1         Mazda RX4  21.0     6   160   110  3.90 2.620 16.46     0     1
-## 2     Mazda RX4 Wag  21.0     6   160   110  3.90 2.875 17.02     0     1
-## 3        Datsun 710  22.8     4   108    93  3.85 2.320 18.61     1     1
-## 4    Hornet 4 Drive  21.4     6   258   110  3.08 3.215 19.44     1     0
-## 5 Hornet Sportabout  18.7     8   360   175  3.15 3.440 17.02     0     0
-## 6           Valiant  18.1     6   225   105  2.76 3.460 20.22     1     0
-## # ... with 2 more variables: gear &lt;int&gt;, carb &lt;int&gt;</code></pre>
-<pre class="r"><code>class(mtcars2)</code></pre>
-<pre><code>## [1] &quot;tbl_sqlite&quot; &quot;tbl_sql&quot;    &quot;tbl_lazy&quot;   &quot;tbl&quot;</code></pre>
-<p>Get some results</p>
-<pre class="r"><code>mtcars %&gt;%
-  group_by(cyl) %&gt;%
-  summarize(N = n(), avg_mpg = mean(mpg), 
-            broken = paste(mean(mpg), mean(disp), sep = &quot;-&quot;))
-
-
-mtcars2 %&gt;%
-  group_by(cyl) %&gt;%
-  summarize(N = n(), avg_mpg = mean(mpg), 
-            broken = paste(mean(mpg), mean(disp)), sep = &quot;-&quot;) %&gt;%
-  show_query()
-
-mtcars3 &lt;- mtcars2 %&gt;% collect()
-
-
-%&gt;%
-  show_query()
-
-mtcars2 %&gt;%
-  group_by(cyl) %&gt;%
-  summarize(N = n(), avg_mpg = mean(mpg), 
-            broken = avg(mpg) %||% &quot;-&quot; %||% mean(disp)) %&gt;%
-  show_query()</code></pre>
+<pre class="r"><code>library(dplyr)
+db &lt;- src_mysql(default.file = &quot;~/.my.cnf&quot;, user = NULL, password = NULL, dbname = &quot;stats&quot;)
+dbListTables(db$con)</code></pre>
+<pre><code>##  [1] &quot;allstarfull&quot;         &quot;appearances&quot;         &quot;awardsmanagers&quot;     
+##  [4] &quot;awardsplayers&quot;       &quot;awardssharemanagers&quot; &quot;awardsshareplayers&quot; 
+##  [7] &quot;batting&quot;             &quot;battingpost&quot;         &quot;collegeplaying&quot;     
+## [10] &quot;fielding&quot;            &quot;fieldingof&quot;          &quot;fieldingpost&quot;       
+## [13] &quot;halloffame&quot;          &quot;homegames&quot;           &quot;managers&quot;           
+## [16] &quot;managershalf&quot;        &quot;master&quot;              &quot;parks&quot;              
+## [19] &quot;pitching&quot;            &quot;pitchingpost&quot;        &quot;salaries&quot;           
+## [22] &quot;schools&quot;             &quot;seriespost&quot;          &quot;teams&quot;              
+## [25] &quot;teamsfranchises&quot;     &quot;teamshalf&quot;</code></pre>
+<pre class="r"><code>class(db)</code></pre>
+<pre><code>## [1] &quot;src_mysql&quot; &quot;src_sql&quot;   &quot;src&quot;</code></pre>
+<pre class="r"><code>str(db)</code></pre>
+<pre><code>## List of 3
+##  $ con  :Formal class &#39;MySQLConnection&#39; [package &quot;RMySQL&quot;] with 1 slot
+##   .. ..@ Id: int [1:2] 0 1
+##  $ info :List of 8
+##   ..$ host           : chr &quot;localhost&quot;
+##   ..$ user           : chr &quot;bbaumer&quot;
+##   ..$ dbname         : chr &quot;stats&quot;
+##   ..$ conType        : chr &quot;Localhost via UNIX socket&quot;
+##   ..$ serverVersion  : chr &quot;5.7.15-0ubuntu0.16.04.1&quot;
+##   ..$ protocolVersion: int 10
+##   ..$ threadId       : int 271
+##   ..$ rsId           : list()
+##  $ disco:&lt;environment: 0x4076320&gt; 
+##  - attr(*, &quot;class&quot;)= chr [1:3] &quot;src_mysql&quot; &quot;src_sql&quot; &quot;src&quot;</code></pre>
+<pre class="r"><code>class(db$con)</code></pre>
+<pre><code>## [1] &quot;MySQLConnection&quot;
+## attr(,&quot;package&quot;)
+## [1] &quot;RMySQL&quot;</code></pre>
+<pre class="r"><code>batting &lt;- tbl(db, &quot;batting&quot;)</code></pre>
+<pre class="r"><code>show_query()</code></pre>
+<pre class="r"><code>CONCAT</code></pre>
+<pre class="r"><code># collect()</code></pre>
+<pre class="r"><code># make strikeout plot</code></pre>
+<pre class="r"><code># fit pythagorean model</code></pre>
 </div>
 
     <div id="footer">

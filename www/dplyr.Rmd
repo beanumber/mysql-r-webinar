@@ -2,54 +2,157 @@
 title: "dplyr and SQL"
 ---
 
+```{r, echo=FALSE, message=FALSE}
+library(knitr)
+opts_chunk$set(error = TRUE, message = FALSE)
+```
+
+
 ## `dplyr` and SQL
 
-A `data.frame`
+```{r, message=FALSE}
+library(dplyr)
+library(DBI)
+db <- src_mysql(user = "r-user", password = "mypass", dbname = "lahman")
+dbListTables(db$con)
+class(db)
+str(db)
+class(db$con)
+```
+
+## Question 1
+
+```
+SELECT playerID, sum(H) as tH 
+  FROM Batting
+  GROUP BY playerID
+  HAVING tH >= 3000
+  ORDER BY tH desc;
+```
 
 ```{r}
-head(mtcars)
-dim(mtcars)
-class(mtcars)
+batting <- tbl(db, "Batting")
+batting %>%
+  group_by(playerID) %>%
+  summarize(tH = sum(H)) %>%
+  arrange(desc(tH))
 ```
 
-Make a SQLite database
+## dplyr translates to SQL
 
-```{r, message=FALSE}
-library(etl)
-cars <- etl("mtcars")
-cars %>%
-  etl_create()
-mtcars2 <- cars %>%
-  tbl("mtcars")
-dim(mtcars2)
-head(mtcars2)
-class(mtcars2)
-```
-
-Get some results
-
-```{r, eval=FALSE}
-mtcars %>%
-  group_by(cyl) %>%
-  summarize(N = n(), avg_mpg = mean(mpg), 
-            broken = paste(mean(mpg), mean(disp), sep = "-"))
-
-
-mtcars2 %>%
-  group_by(cyl) %>%
-  summarize(N = n(), avg_mpg = mean(mpg), 
-            broken = paste(mean(mpg), mean(disp)), sep = "-") %>%
-  show_query()
-
-mtcars3 <- mtcars2 %>% collect()
-
-
-%>%
-  show_query()
-
-mtcars2 %>%
-  group_by(cyl) %>%
-  summarize(N = n(), avg_mpg = mean(mpg), 
-            broken = avg(mpg) %||% "-" %||% mean(disp)) %>%
+```{r}
+batting %>%
+  group_by(playerID) %>%
+  summarize(tH = sum(H)) %>%
+  arrange(desc(tH)) %>%
   show_query()
 ```
+
+## Pass SQL commands through R
+
+```
+SELECT b.playerID, CONCAT(m.nameLast, ', ', m.nameFirst) as Name, 
+    CONCAT(min(yearID), '-', max(yearID)) as span, sum(H) as tH
+  FROM Batting b
+  LEFT JOIN Master m ON b.playerID = m.playerID 
+  WHERE yearID BETWEEN 1980 AND 1989
+  GROUP BY playerID
+  ORDER BY tH desc
+  LIMIT 0, 10;
+```
+
+This looks like valid R code:
+
+```{r}
+master <- tbl(db, "Master")
+batting %>%
+  left_join(master, by = "playerID") %>%
+  filter(yearID >= 1980, yearID <= 1989) %>%
+  group_by(playerID) %>%
+  summarize(name = first(paste0(nameLast, ', ', nameFirst)), tH = sum(H)) %>%
+  arrange(desc(tH))
+```
+
+But it doesn't work because MySQL doesn't have a command called `PASTE0`. Note that `dplyr` doen't know how to translate `paste0()`.
+
+```{r}
+translate_sql(paste0("hi"))
+```
+
+There are two workarounds for this: either write SQL code into the pipeline, or use `collect()` to bring the data back into R first. The former will be more efficient, but might look weird. 
+
+```{r}
+batting %>%
+  left_join(master, by = "playerID") %>%
+  filter(yearID >= 1980, yearID <= 1989) %>%
+  group_by(playerID) %>%
+  summarize(name = MAX(CONCAT(nameLast, ', ', nameFirst)), tH = sum(H)) %>%
+  arrange(desc(tH))
+```
+
+The approach with `collect()` will be less efficient.
+
+```{r}
+master_lcl <- collect(master)
+batting_lcl <- collect(batting)
+batting_lcl %>%
+  left_join(master_lcl, by = "playerID") %>%
+  filter(yearID >= 1980, yearID <= 1989) %>%
+  group_by(playerID) %>%
+  summarize(name = max(paste0(nameLast, ', ', nameFirst)), tH = sum(H)) %>%
+  arrange(desc(tH))
+```
+
+Notice the differences between `master_lcl` and `master`:
+
+```{r}
+class(master)
+class(master_lcl)
+print(object.size(master), units = "Mb")
+print(object.size(master_lcl), units = "Mb")
+```
+
+## Plotting
+
+```
+SELECT yearID, lgID, sum(SO) / sum(AB + BB + HBP + SF + SH) as SO_rate
+  FROM Batting 
+  WHERE yearID >= 1954
+  GROUP BY yearID, lgID;
+```
+
+
+```{r}
+so_rates <- batting %>%
+  filter(yearID >= 1954) %>%
+  group_by(yearID, lgID) %>%
+  summarize(so_rate = sum(SO) / sum(AB + BB + HBP + SF + SH)) %>%
+  collect()
+library(ggplot2)
+ggplot(data = so_rates, aes(x = yearID, y = so_rate, color = lgID)) + 
+  geom_line()
+```
+
+## Fitting models
+
+```
+SELECT teamID, yearID, W / (W + L) as WPct, R as RS, RA
+  FROM Teams
+  WHERE yearID >= 1954;
+```
+
+```{r}
+pythag <- tbl(db, "Teams") %>%
+  filter(yearID >= 1954) %>%
+  mutate(wpct = W / (W + L), run_ratio = R / RA) %>%
+  select(teamID, yearID, wpct, run_ratio) %>%
+  collect()
+ggplot(data = pythag, aes(x = run_ratio, y = wpct)) + 
+  geom_point(alpha = 0.5)
+library(mosaic)
+fitModel(formula = wpct ~ 1 / (1 + (1 / run_ratio)^k), data = pythag) %>%
+  coef()
+```
+
+
+
