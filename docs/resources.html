@@ -220,25 +220,18 @@ $(document).ready(function () {
 <ul>
 <li>Using SQL:
 <ul>
-<li>Download and install <a href="http://www.postgresql.com/download">PostgreSQL</a></li>
-<li>Download and install the <a href="http://www.pgadmin.org/download/">pgAdmin</a>. This is the most widely-used GUI for working with PostgresQL. It is free, open-source, and cross-platform.</li>
-<li>The command line program <a href="http://www.postgresql.org/docs/9.4/static/app-psql.html">psql</a> should be installed, but you might need to configure your <code>$PATH</code> variable in order to find it.</li>
-<li><code>dplyr</code> provides a syntax for pulling PostgreSQL data directly into R, but relies upon the <a href="http://cran.r-project.org/web/packages/RPostgreSQL/index.html"><code>RPostgreSQL</code> package</a> to do so. This package is cross-platform, but is not always available as a binary.</li>
-<li><p>Installing <code>RPostgreSQL</code>:</p>
-<pre class="r"><code>install.packages(&quot;RPostgreSQL&quot;)</code></pre>
+<li>Download and install <a href="http://www.mysql.com/download">MySQL</a></li>
+<li>Download and install the <a href="http://dev.mysql.com/downloads/workbench/">MySQL Workbench</a>. This is the officially-supported GUI for working with MyQL. It is free, open-source, and cross-platform.</li>
+<li><code>dplyr</code> provides a syntax for pulling MySQL data directly into R, but relies upon the <a href="http://cran.r-project.org/web/packages/RMySQL/index.html"><code>RMySQL</code> package</a> to do so. This package is cross-platform, but is not always available as a binary.</li>
+<li><p>Installing <code>RMySQL</code>:</p>
+<pre class="r"><code>install.packages(&quot;RMySQL&quot;)</code></pre>
 <p>If that doesn’t work, try:</p>
-<pre class="r"><code>install.packages(&quot;RPostgreSQL&quot;, type=&quot;source&quot;)</code></pre></li>
-<li>Read the <a href="http://www.postgresql.org/docs/9.4/interactive/index.html">PostgreSQL Documentation</a>!</li>
+<pre class="r"><code>install.packages(&quot;RMySQL&quot;, type=&quot;source&quot;)</code></pre></li>
+<li>Read the <a href="https://dev.mysql.com/doc/refman/5.7/en/">MySQL Documentation</a>!</li>
 </ul></li>
 <li>Books
 <ul>
 <li><a href="http://www.amazon.com/SQL-Nutshell-OReilly-Kevin-Kline/dp/0596518846/ref=sr_1_1?s=books&amp;ie=UTF8&amp;qid=1433865473&amp;sr=1-1&amp;keywords=sql+in+a+nutshell">SQL in a Nutshell</a></li>
-</ul></li>
-<li><code>etl</code> packages:
-<ul>
-<li><a href="http://www.github.com/beanumber/etl"><code>etl</code></a></li>
-<li><a href="http://www.github.com/beanumber/airlines"><code>airlines</code></a></li>
-<li><a href="http://www.github.com/beanumber/fec"><code>fec</code></a></li>
 </ul></li>
 </ul>
 

@@ -220,17 +220,17 @@ $(document).ready(function () {
 <div id="dplyr-and-sql" class="section level2">
 <h2><code>dplyr</code> and SQL</h2>
 <pre class="r"><code>library(dplyr)
-db &lt;- src_mysql(default.file = &quot;~/.my.cnf&quot;, user = NULL, password = NULL, dbname = &quot;stats&quot;)
+library(DBI)
+db &lt;- src_mysql(user = &quot;r-user&quot;, password = &quot;mypass&quot;, dbname = &quot;lahman&quot;)
 dbListTables(db$con)</code></pre>
-<pre><code>##  [1] &quot;allstarfull&quot;         &quot;appearances&quot;         &quot;awardsmanagers&quot;     
-##  [4] &quot;awardsplayers&quot;       &quot;awardssharemanagers&quot; &quot;awardsshareplayers&quot; 
-##  [7] &quot;batting&quot;             &quot;battingpost&quot;         &quot;collegeplaying&quot;     
-## [10] &quot;fielding&quot;            &quot;fieldingof&quot;          &quot;fieldingpost&quot;       
-## [13] &quot;halloffame&quot;          &quot;homegames&quot;           &quot;managers&quot;           
-## [16] &quot;managershalf&quot;        &quot;master&quot;              &quot;parks&quot;              
-## [19] &quot;pitching&quot;            &quot;pitchingpost&quot;        &quot;salaries&quot;           
-## [22] &quot;schools&quot;             &quot;seriespost&quot;          &quot;teams&quot;              
-## [25] &quot;teamsfranchises&quot;     &quot;teamshalf&quot;</code></pre>
+<pre><code>##  [1] &quot;AllstarFull&quot;         &quot;Appearances&quot;         &quot;AwardsManagers&quot;     
+##  [4] &quot;AwardsPlayers&quot;       &quot;AwardsShareManagers&quot; &quot;AwardsSharePlayers&quot; 
+##  [7] &quot;Batting&quot;             &quot;BattingPost&quot;         &quot;CollegePlaying&quot;     
+## [10] &quot;Fielding&quot;            &quot;FieldingOF&quot;          &quot;FieldingPost&quot;       
+## [13] &quot;HallOfFame&quot;          &quot;Managers&quot;            &quot;ManagersHalf&quot;       
+## [16] &quot;Master&quot;              &quot;Pitching&quot;            &quot;PitchingPost&quot;       
+## [19] &quot;Salaries&quot;            &quot;Schools&quot;             &quot;SeriesPost&quot;         
+## [22] &quot;Teams&quot;               &quot;TeamsFranchises&quot;     &quot;TeamsHalf&quot;</code></pre>
 <pre class="r"><code>class(db)</code></pre>
 <pre><code>## [1] &quot;src_mysql&quot; &quot;src_sql&quot;   &quot;src&quot;</code></pre>
 <pre class="r"><code>str(db)</code></pre>
@@ -239,25 +239,180 @@ dbListTables(db$con)</code></pre>
 ##   .. ..@ Id: int [1:2] 0 1
 ##  $ info :List of 8
 ##   ..$ host           : chr &quot;localhost&quot;
-##   ..$ user           : chr &quot;bbaumer&quot;
-##   ..$ dbname         : chr &quot;stats&quot;
+##   ..$ user           : chr &quot;r-user&quot;
+##   ..$ dbname         : chr &quot;lahman&quot;
 ##   ..$ conType        : chr &quot;Localhost via UNIX socket&quot;
 ##   ..$ serverVersion  : chr &quot;5.7.15-0ubuntu0.16.04.1&quot;
 ##   ..$ protocolVersion: int 10
-##   ..$ threadId       : int 271
+##   ..$ threadId       : int 312
 ##   ..$ rsId           : list()
-##  $ disco:&lt;environment: 0x4076320&gt; 
+##  $ disco:&lt;environment: 0x3cd1760&gt; 
 ##  - attr(*, &quot;class&quot;)= chr [1:3] &quot;src_mysql&quot; &quot;src_sql&quot; &quot;src&quot;</code></pre>
 <pre class="r"><code>class(db$con)</code></pre>
 <pre><code>## [1] &quot;MySQLConnection&quot;
 ## attr(,&quot;package&quot;)
 ## [1] &quot;RMySQL&quot;</code></pre>
-<pre class="r"><code>batting &lt;- tbl(db, &quot;batting&quot;)</code></pre>
-<pre class="r"><code>show_query()</code></pre>
-<pre class="r"><code>CONCAT</code></pre>
-<pre class="r"><code># collect()</code></pre>
-<pre class="r"><code># make strikeout plot</code></pre>
-<pre class="r"><code># fit pythagorean model</code></pre>
+</div>
+<div id="question-1" class="section level2">
+<h2>Question 1</h2>
+<pre><code>SELECT playerID, sum(H) as tH 
+  FROM Batting
+  GROUP BY playerID
+  HAVING tH &gt;= 3000
+  ORDER BY tH desc;</code></pre>
+<pre class="r"><code>batting &lt;- tbl(db, &quot;Batting&quot;)
+batting %&gt;%
+  group_by(playerID) %&gt;%
+  summarize(tH = sum(H)) %&gt;%
+  arrange(desc(tH))</code></pre>
+<pre><code>## Source:   query [?? x 2]
+## Database: mysql 5.7.15-0ubuntu0.16.04.1 [r-user@localhost:/lahman]</code></pre>
+<pre><code>## Warning in .local(conn, statement, ...): Decimal MySQL column 1 imported as
+## numeric</code></pre>
+<pre><code>##     playerID    tH
+##        &lt;chr&gt; &lt;dbl&gt;
+## 1   rosepe01  4256
+## 2   cobbty01  4189
+## 3  aaronha01  3771
+## 4  musiast01  3630
+## 5  speaktr01  3514
+## 6  jeterde01  3465
+## 7  yastrca01  3419
+## 8  ansonca01  3418
+## 9  wagneho01  3415
+## 10 molitpa01  3319
+## # ... with more rows</code></pre>
+</div>
+<div id="dplyr-translates-to-sql" class="section level2">
+<h2>dplyr translates to SQL</h2>
+<pre class="r"><code>batting %&gt;%
+  group_by(playerID) %&gt;%
+  summarize(tH = sum(H)) %&gt;%
+  arrange(desc(tH)) %&gt;%
+  show_query()</code></pre>
+</div>
+<div id="pass-sql-commands-through-r" class="section level2">
+<h2>Pass SQL commands through R</h2>
+<pre><code>SELECT b.playerID, CONCAT(m.nameLast, &#39;, &#39;, m.nameFirst) as Name, 
+    CONCAT(min(yearID), &#39;-&#39;, max(yearID)) as span, sum(H) as tH
+  FROM Batting b
+  LEFT JOIN Master m ON b.playerID = m.playerID 
+  WHERE yearID BETWEEN 1980 AND 1989
+  GROUP BY playerID
+  ORDER BY tH desc
+  LIMIT 0, 10;</code></pre>
+<p>This looks like valid R code:</p>
+<pre class="r"><code>master &lt;- tbl(db, &quot;Master&quot;)
+batting %&gt;%
+  left_join(master, by = &quot;playerID&quot;) %&gt;%
+  filter(yearID &gt;= 1980, yearID &lt;= 1989) %&gt;%
+  group_by(playerID) %&gt;%
+  summarize(name = first(paste0(nameLast, &#39;, &#39;, nameFirst)), tH = sum(H)) %&gt;%
+  arrange(desc(tH))</code></pre>
+<pre><code>## Source:   query [?? x 3]
+## Database: mysql 5.7.15-0ubuntu0.16.04.1 [r-user@localhost:/lahman]</code></pre>
+<pre><code>## Error in .local(conn, statement, ...): could not run statement: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near &#39;(PASTE0(`nameLast`, &#39;, &#39;, `nameFirst`)) AS `name`, SUM(`H`) AS `tH`
+## FROM (SELECT&#39; at line 3</code></pre>
+<p>But it doesn’t work because MySQL doesn’t have a command called <code>PASTE0</code>. Note that <code>dplyr</code> doen’t know how to translate <code>paste0()</code>.</p>
+<pre class="r"><code>translate_sql(paste0(&quot;hi&quot;))</code></pre>
+<pre><code>## &lt;SQL&gt; PASTE0(&#39;hi&#39;)</code></pre>
+<p>There are two workarounds for this: either write SQL code into the pipeline, or use <code>collect()</code> to bring the data back into R first. The former will be more efficient, but might look weird.</p>
+<pre class="r"><code>batting %&gt;%
+  left_join(master, by = &quot;playerID&quot;) %&gt;%
+  filter(yearID &gt;= 1980, yearID &lt;= 1989) %&gt;%
+  group_by(playerID) %&gt;%
+  summarize(name = MAX(CONCAT(nameLast, &#39;, &#39;, nameFirst)), tH = sum(H)) %&gt;%
+  arrange(desc(tH))</code></pre>
+<pre><code>## Source:   query [?? x 3]
+## Database: mysql 5.7.15-0ubuntu0.16.04.1 [r-user@localhost:/lahman]</code></pre>
+<pre><code>## Warning in .local(conn, statement, ...): Decimal MySQL column 2 imported as
+## numeric</code></pre>
+<pre><code>##     playerID              name    tH
+##        &lt;chr&gt;             &lt;chr&gt; &lt;dbl&gt;
+## 1  yountro01      Yount, Robin  1731
+## 2  murraed02     Murray, Eddie  1642
+## 3  wilsowi02    Wilson, Willie  1639
+## 4  boggswa01       Boggs, Wade  1597
+## 5  murphda05      Murphy, Dale  1553
+## 6  baineha01    Baines, Harold  1547
+## 7  dawsoan01     Dawson, Andre  1539
+## 8  henderi01 Henderson, Rickey  1507
+## 9  trammal01    Trammell, Alan  1504
+## 10 evansdw01     Evans, Dwight  1497
+## # ... with more rows</code></pre>
+<p>The approach with <code>collect()</code> will be less efficient.</p>
+<pre class="r"><code>master_lcl &lt;- collect(master)
+batting_lcl &lt;- collect(batting)
+batting_lcl %&gt;%
+  left_join(master_lcl, by = &quot;playerID&quot;) %&gt;%
+  filter(yearID &gt;= 1980, yearID &lt;= 1989) %&gt;%
+  group_by(playerID) %&gt;%
+  summarize(name = max(paste0(nameLast, &#39;, &#39;, nameFirst)), tH = sum(H)) %&gt;%
+  arrange(desc(tH))</code></pre>
+<pre><code>## # A tibble: 2,281 × 3
+##     playerID              name    tH
+##        &lt;chr&gt;             &lt;chr&gt; &lt;int&gt;
+## 1  yountro01      Yount, Robin  1731
+## 2  murraed02     Murray, Eddie  1642
+## 3  wilsowi02    Wilson, Willie  1639
+## 4  boggswa01       Boggs, Wade  1597
+## 5  murphda05      Murphy, Dale  1553
+## 6  baineha01    Baines, Harold  1547
+## 7  dawsoan01     Dawson, Andre  1539
+## 8  henderi01 Henderson, Rickey  1507
+## 9  trammal01    Trammell, Alan  1504
+## 10 evansdw01     Evans, Dwight  1497
+## # ... with 2,271 more rows</code></pre>
+<p>Notice the differences between <code>master_lcl</code> and <code>master</code>:</p>
+<pre class="r"><code>class(master)</code></pre>
+<pre><code>## [1] &quot;tbl_mysql&quot; &quot;tbl_sql&quot;   &quot;tbl_lazy&quot;  &quot;tbl&quot;</code></pre>
+<pre class="r"><code>class(master_lcl)</code></pre>
+<pre><code>## [1] &quot;tbl_df&quot;     &quot;tbl&quot;        &quot;data.frame&quot;</code></pre>
+<pre class="r"><code>print(object.size(master), units = &quot;Mb&quot;)</code></pre>
+<pre><code>## 0 Mb</code></pre>
+<pre class="r"><code>print(object.size(master_lcl), units = &quot;Mb&quot;)</code></pre>
+<pre><code>## 8.6 Mb</code></pre>
+</div>
+<div id="plotting" class="section level2">
+<h2>Plotting</h2>
+<pre><code>SELECT yearID, lgID, sum(SO) / sum(AB + BB + HBP + SF + SH) as SO_rate
+  FROM Batting 
+  WHERE yearID &gt;= 1954
+  GROUP BY yearID, lgID;</code></pre>
+<pre class="r"><code>so_rates &lt;- batting %&gt;%
+  filter(yearID &gt;= 1954) %&gt;%
+  group_by(yearID, lgID) %&gt;%
+  summarize(so_rate = sum(SO) / sum(AB + BB + HBP + SF + SH)) %&gt;%
+  collect()</code></pre>
+<pre><code>## Warning in .local(conn, statement, ...): Decimal MySQL column 2 imported as
+## numeric</code></pre>
+<pre class="r"><code>library(ggplot2)
+ggplot(data = so_rates, aes(x = yearID, y = so_rate, color = lgID)) + 
+  geom_line()</code></pre>
+<p><img src="dplyr_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+</div>
+<div id="fitting-models" class="section level2">
+<h2>Fitting models</h2>
+<pre><code>SELECT teamID, yearID, W / (W + L) as WPct, R as RS, RA
+  FROM Teams
+  WHERE yearID &gt;= 1954;</code></pre>
+<pre class="r"><code>pythag &lt;- tbl(db, &quot;Teams&quot;) %&gt;%
+  filter(yearID &gt;= 1954) %&gt;%
+  mutate(wpct = W / (W + L), run_ratio = R / RA) %&gt;%
+  select(teamID, yearID, wpct, run_ratio) %&gt;%
+  collect()</code></pre>
+<pre><code>## Warning in .local(conn, statement, ...): Decimal MySQL column 2 imported as
+## numeric</code></pre>
+<pre><code>## Warning in .local(conn, statement, ...): Decimal MySQL column 3 imported as
+## numeric</code></pre>
+<pre class="r"><code>ggplot(data = pythag, aes(x = run_ratio, y = wpct)) + 
+  geom_point(alpha = 0.5)</code></pre>
+<p><img src="dplyr_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<pre class="r"><code>library(mosaic)
+fitModel(formula = wpct ~ 1 / (1 + (1 / run_ratio)^k), data = pythag) %&gt;%
+  coef()</code></pre>
+<pre><code>##        k 
+## 1.846349</code></pre>
 </div>
 
     <div id="footer">
