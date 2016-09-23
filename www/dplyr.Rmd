@@ -32,19 +32,39 @@ SELECT playerID, sum(H) as tH
 
 ```{r}
 batting <- tbl(db, "Batting")
-batting %>%
+res <- batting %>%
   group_by(playerID) %>%
   summarize(tH = sum(H)) %>%
+  filter(tH >= 3000) %>%
   arrange(desc(tH))
 ```
 
-## dplyr translates to SQL
+```{r}
+library(ggplot2)
+ggplot(data = collect(res), aes(x = reorder(playerID, tH), y = tH)) + 
+  geom_bar(stat = "identity") + 
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+## `dplyr` data verbs
+
+[Introduction to `dplyr`](https://cran.rstudio.com/web/packages/dplyr/vignettes/introduction.html)
+
+Based on SQL syntax:
+
+* `select()` -> `SELECT`
+* `mutate()` -> user-defined columns
+* `summarize()` -> aggregated columns
+* `left_join()` -> `LEFT JOIN`
+* `filter()` -> `WHERE`
+* `group_by()` -> `GROUP BY`
+* `filter()` -> `HAVING`
+* `arrange()` -> `ORDER BY`
+
+## `dplyr` translates R code into SQL code
 
 ```{r}
-batting %>%
-  group_by(playerID) %>%
-  summarize(tH = sum(H)) %>%
-  arrange(desc(tH)) %>%
+res %>% 
   show_query()
 ```
 
@@ -75,7 +95,7 @@ batting %>%
 
 But it doesn't work because MySQL doesn't have a command called `PASTE0`. Note that `dplyr` doen't know how to translate `paste0()`.
 
-```{r}
+```{r, eval=TRUE}
 translate_sql(paste0("hi"))
 ```
 

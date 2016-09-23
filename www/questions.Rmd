@@ -9,7 +9,7 @@ library(knitr)
 opts_chunk$set(echo = FALSE, message = FALSE, eval = FALSE)
 library(dplyr)
 library(DBI)
-db <- src_mysql(user = "r-user", password = "mypass", dbname = "stats")
+db <- src_mysql(user = "r-user", password = "mypass", dbname = "lahman")
 dbListTables(db$con)
 ```
 
@@ -84,7 +84,7 @@ SELECT playerID, yearID, sum(HR) as tHR, sum(SB) as tSB
   ORDER BY tHR desc;
 ```
 
-#. Find the namnes of the top 10 batters who had the most hits during the decade of the 1980s.
+#. Find the names of the top 10 batters who had the most hits during the decade of the 1980s.
 
 ```{mysql}
 SELECT b.playerID, CONCAT(m.nameLast, ', ', m.nameFirst) as Name, 

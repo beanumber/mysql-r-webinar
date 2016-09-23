@@ -235,17 +235,34 @@ class(db$con)</code></pre>
   HAVING tH &gt;= 3000
   ORDER BY tH desc;</code></pre>
 <pre class="r"><code>batting &lt;- tbl(db, &quot;Batting&quot;)
-batting %&gt;%
+res &lt;- batting %&gt;%
   group_by(playerID) %&gt;%
   summarize(tH = sum(H)) %&gt;%
+  filter(tH &gt;= 3000) %&gt;%
   arrange(desc(tH))</code></pre>
+<pre class="r"><code>library(ggplot2)
+ggplot(data = collect(res), aes(x = reorder(playerID, tH), y = tH)) + 
+  geom_bar(stat = &quot;identity&quot;) + 
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))</code></pre>
 </div>
-<div id="dplyr-translates-to-sql" class="section level2">
-<h2>dplyr translates to SQL</h2>
-<pre class="r"><code>batting %&gt;%
-  group_by(playerID) %&gt;%
-  summarize(tH = sum(H)) %&gt;%
-  arrange(desc(tH)) %&gt;%
+<div id="dplyr-data-verbs" class="section level2">
+<h2><code>dplyr</code> data verbs</h2>
+<p><a href="https://cran.rstudio.com/web/packages/dplyr/vignettes/introduction.html">Introduction to <code>dplyr</code></a></p>
+<p>Based on SQL syntax:</p>
+<ul>
+<li><code>select()</code> -&gt; <code>SELECT</code></li>
+<li><code>mutate()</code> -&gt; user-defined columns</li>
+<li><code>summarize()</code> -&gt; aggregated columns</li>
+<li><code>left_join()</code> -&gt; <code>LEFT JOIN</code></li>
+<li><code>filter()</code> -&gt; <code>WHERE</code></li>
+<li><code>group_by()</code> -&gt; <code>GROUP BY</code></li>
+<li><code>filter()</code> -&gt; <code>HAVING</code></li>
+<li><code>arrange()</code> -&gt; <code>ORDER BY</code></li>
+</ul>
+</div>
+<div id="dplyr-translates-r-code-into-sql-code" class="section level2">
+<h2><code>dplyr</code> translates R code into SQL code</h2>
+<pre class="r"><code>res %&gt;% 
   show_query()</code></pre>
 </div>
 <div id="pass-sql-commands-through-r" class="section level2">
@@ -268,6 +285,7 @@ batting %&gt;%
   arrange(desc(tH))</code></pre>
 <p>But it doesn’t work because MySQL doesn’t have a command called <code>PASTE0</code>. Note that <code>dplyr</code> doen’t know how to translate <code>paste0()</code>.</p>
 <pre class="r"><code>translate_sql(paste0(&quot;hi&quot;))</code></pre>
+<pre><code>## &lt;SQL&gt; PASTE0(&#39;hi&#39;)</code></pre>
 <p>There are two workarounds for this: either write SQL code into the pipeline, or use <code>collect()</code> to bring the data back into R first. The former will be more efficient, but might look weird.</p>
 <pre class="r"><code>batting %&gt;%
   left_join(master, by = &quot;playerID&quot;) %&gt;%

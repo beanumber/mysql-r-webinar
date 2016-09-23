@@ -2,17 +2,72 @@
 title: "DBI"
 ---
 
-## DBI
+## Export to CSV and import to R
+
+```{r, eval=FALSE}
+res <- read.csv("/tmp/3000_hit_club.csv")
+
+library(ggplot2)
+ggplot(data = res, aes(x = reorder(playerID, tH), y = tH)) + 
+  geom_bar(stat = "identity") + 
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+Clunky, error-prone, not automated, not reproducible
+
+## Connect directly using DBI
+
+(https://github.com/rstats-db/DBI)
+
+Connects seamlessly to SQLite, MySQL, PostgreSQL, MonetDB, etc.
 
 ```{r}
 library(DBI)
 conn <- dbConnect(RMySQL::MySQL(), dbname = "lahman", user = "r-user", password = "mypass")
-dbListTables(conn)
 ```
 
+Retrieve results using `dbGetQuery()`.
+
 ```{r}
-sql <- "SELECT * FROM Batting WHERE playerID = 'jeterde01';"
+sql <- "
+SELECT playerID, sum(H) as tH 
+  FROM Batting
+  GROUP BY playerID
+  HAVING tH >= 3000
+  ORDER BY tH desc;"
 res <- dbGetQuery(conn, sql)
 res
 ```
+
+### Get Info
+
+About a connection
+
+```{r}
+dbGetInfo(conn)
+dbListFields(conn, name = "Batting")
+```
+
+About a database/schema
+
+```{r}
+dbListTables(conn)
+```
+
+About a table
+
+```{r}
+dbListFields(conn, name = "Batting")
+```
+
+### Read tables
+
+```{r}
+Teams <- dbReadTable(conn, "Teams")
+str(Teams)
+```
+
+### Many other things...
+
+Many other SQL operations including writing tables, performing transactions, etc. are possible through `DBI`.
 
